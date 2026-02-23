@@ -1,7 +1,7 @@
 import axios from "axios";
 
-// Use relative URLs for Vercel compatibility (works locally and in production)
-const API_URL = "/api/auth";
+// Use environment-based URL for production vs development
+const API_URL = import.meta.env.VITE_API_URL || "/api/auth";
 
 const api = axios.create({
   baseURL: API_URL,
