@@ -1,6 +1,7 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:5001/api/auth";
+// Use relative URLs for Vercel compatibility (works locally and in production)
+const API_URL = "/api/auth";
 
 const api = axios.create({
   baseURL: API_URL,
@@ -36,31 +37,25 @@ export const authAPI = {
   },
 };
 
-// Task API
+// Task API - use relative paths
 export const taskAPI = {
   getTasks: async () => {
-    const response = await api.get("http://localhost:5001/api/tasks");
+    const response = await api.get("/tasks");
     return response.data;
   },
 
   createTask: async (taskData) => {
-    const response = await api.post(
-      "http://localhost:5001/api/tasks",
-      taskData,
-    );
+    const response = await api.post("/tasks", taskData);
     return response.data;
   },
 
   updateTask: async (id, taskData) => {
-    const response = await api.put(
-      `http://localhost:5001/api/tasks/${id}`,
-      taskData,
-    );
+    const response = await api.put(`/tasks/${id}`, taskData);
     return response.data;
   },
 
   deleteTask: async (id) => {
-    const response = await api.delete(`http://localhost:5001/api/tasks/${id}`);
+    const response = await api.delete(`/tasks/${id}`);
     return response.data;
   },
 };
