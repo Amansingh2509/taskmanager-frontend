@@ -1,7 +1,21 @@
 import axios from "axios";
 
 // Use environment-based URL for production vs development
-const API_URL = import.meta.env.VITE_API_URL || "/api/auth";
+// IMPORTANT: Set VITE_API_URL in Vercel to: https://taskmanager-backend-indol.vercel.app
+const getApiUrl = () => {
+  const envUrl = import.meta.env.VITE_API_URL;
+  if (envUrl) return envUrl;
+
+  // Fallback for local development only
+  if (import.meta.env.DEV) {
+    return "http://localhost:5001/api/auth";
+  }
+
+  // Production fallback - but this MUST be overridden in Vercel!
+  return "/api/auth";
+};
+
+const API_URL = getApiUrl();
 
 const api = axios.create({
   baseURL: API_URL,
@@ -9,6 +23,16 @@ const api = axios.create({
     "Content-Type": "application/json",
   },
 });
+
+// Debug logging in development
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    console.error("API Error:", error.message);
+    console.error("API URL:", API_URL);
+    return Promise.reject(error);
+  },
+);
 
 // Add token to requests
 api.interceptors.request.use((config) => {
